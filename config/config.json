@@ -4,13 +4,11 @@
     "storage": "fsjstd-restapi.db"
   },
   "test": {
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "sqlite",
+    "storage": "fsjstd-restapi.db"
   },
   "production": {
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "sqlite",
+    "storage": "fsjstd-restapi.db"
   }
 }
