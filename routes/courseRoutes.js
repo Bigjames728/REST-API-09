@@ -45,6 +45,8 @@ router.post('/', asyncHandler (async (req, res) => {
 
 // PUT route that will update the corresponding course and return a 204 status code and no content.
 router.put('/:id', asyncHandler( async (req, res) => {
+
+    // The below validation isn't working for some reason.
     const course = req.body;
 
     const errors = [];
