@@ -32,7 +32,7 @@ router.get('/:id', asyncHandler ( async (req, res) => {
 router.post('/', asyncHandler (async (req, res) => {
     try {
         await Course.create(req.body);
-        res.status(201).location('/'); // I think I need some work here. I think I need to add the id to the end of this url when the course is created.
+        res.status(201).location('/api/courses/' + id).end(); // I think I need some work here. I think I need to add the id to the end of this url when the course is created.
     } catch (error) {
         if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
             const errors = error.errors.map(err => err.message);
@@ -45,9 +45,22 @@ router.post('/', asyncHandler (async (req, res) => {
 
 // PUT route that will update the corresponding course and return a 204 status code and no content.
 router.put('/:id', asyncHandler( async (req, res) => {
-    let course;
+    const course = req.body;
+
+    const errors = [];
+
+    // Validate title field 
+    if (!course.title) {
+        errors.push('Please provide a title.')
+    }
+
+    // Validate description field
+    if (!course.description) {
+        error.push('Please provide a description.')
+    }
+
     try {
-        course = await Course.findByPk(req.params.id);
+        const course = await Course.findByPk(req.params.id);
         if (course) {
         await course.update(req.body);
         res.status(204).end();
