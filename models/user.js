@@ -1,11 +1,8 @@
 'use strict';
+const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 
-
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class User extends Model {
     /**
      * Helper method for defining associations.
@@ -68,12 +65,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     password: {
-      type: DataTypes.VIRTUAL,
+      type: DataTypes.STRING,
       allowNull: false,
-      set(val) {
-          const hashedPassword = bcrypt.hashSync(val, 10);
-          this.setDataValue('password', hashedPassword);
-      },
       validate: {
         notNull: {
           msg: 'A password is required.'
@@ -85,7 +78,11 @@ module.exports = (sequelize, DataTypes) => {
         //   args: [8, 20],
         //   msg: 'The password should be between 8 and 20 characters.'
         // }
-      }
+      },
+      set(val) {
+        const hashedPassword = bcrypt.hashSync(val, 10);
+        this.setDataValue('password', hashedPassword);
+      },
     }
   }, {
     sequelize,
