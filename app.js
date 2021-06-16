@@ -7,6 +7,7 @@ const { sequelize, User, Course } = require('./models');
 
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const bodyParser = require('body-parser');
 
 
 // variable to enable global error logging
@@ -14,6 +15,10 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 
 // create the Express app
 const app = express();
+
+// Body parser
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 // Add routes
 app.use('/api/users', userRoutes);
