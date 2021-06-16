@@ -1,6 +1,7 @@
 'use strict';
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { BOOLEAN } = require('sequelize');
 
 module.exports = (sequelize) => {
   class User extends Model {
@@ -80,6 +81,9 @@ module.exports = (sequelize) => {
         // }
       },
       set(val) {
+        if (!(val.length >= 8 && val.length <= 20)) {
+          throw Error('The password should be between 8 and 20 characters.');
+        }
         const hashedPassword = bcrypt.hashSync(val, 10);
         this.setDataValue('password', hashedPassword);
       },
