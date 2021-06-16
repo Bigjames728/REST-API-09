@@ -3,6 +3,7 @@ const router = express.Router();
 const Course = require('../models').Course;
 const User = require('../models').User;
 const { asyncHandler } = require('../middleware/async-handler');
+const { authenticateUser } = require('../middleware/auth-user');
 
 // GET route that will return a list of all courses including the User that owns each course and a 200 HTTP status code.
 router.get('/', asyncHandler( async (req, res) => {
@@ -29,7 +30,7 @@ router.get('/:id', asyncHandler ( async (req, res) => {
 }));
 
 // POST route that will create a new course, set the Location header to the URI for the newly created course, and return a 201 HTTP status code and no content.
-router.post('/', asyncHandler (async (req, res) => {
+router.post('/', authenticateUser, asyncHandler (async (req, res) => {
     let course = req.body;
     try {
         await Course.create(req.body);
@@ -45,7 +46,7 @@ router.post('/', asyncHandler (async (req, res) => {
 }));
 
 // PUT route that will update the corresponding course and return a 204 status code and no content.
-router.put('/:id', asyncHandler( async (req, res) => {
+router.put('/:id', authenticateUser, asyncHandler( async (req, res) => {
 
     // The below validation isn't working for some reason.
     const course = req.body;
@@ -81,7 +82,7 @@ router.put('/:id', asyncHandler( async (req, res) => {
 }));
 
 // DELETE route that will delete a specific course and return a 204 HTTP status code and no content.
-router.delete('/:id', asyncHandler( async(req, res) => {
+router.delete('/:id', authenticateUser, asyncHandler( async(req, res) => {
     const course = await Course.findByPk(req.params.id);
     if (course) {
         await course.destroy();

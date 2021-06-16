@@ -3,9 +3,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models').User;
 const { asyncHandler } = require('../middleware/async-handler');
+const { authenticateUser } = require('../middleware/auth-user');
 
 // GET route that returns the currently authenticated user along with a 200 status code
-router.get('/', asyncHandler( async (req, res) => {
+router.get('/', authenticateUser, asyncHandler( async (req, res) => {
     const user = req.currentUser;
     res.status(200).json(user);
 }));
