@@ -54,12 +54,12 @@ router.put('/:id', asyncHandler( async (req, res) => {
 
     // Validate title field 
     if (!course.title) {
-        errors.push('Please provide a title.')
+        errors.push('Please provide a title.');
     }
 
     // Validate description field
     if (!course.description) {
-        error.push('Please provide a description.')
+        errors.push('Please provide a description.');
     }
 
     try {
