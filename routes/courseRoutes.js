@@ -30,9 +30,10 @@ router.get('/:id', asyncHandler ( async (req, res) => {
 
 // POST route that will create a new course, set the Location header to the URI for the newly created course, and return a 201 HTTP status code and no content.
 router.post('/', asyncHandler (async (req, res) => {
+    let course = req.body;
     try {
         await Course.create(req.body);
-        res.status(201).location('/api/courses/' + id).end(); // I think I need some work here. I think I need to add the id to the end of this url when the course is created.
+        res.status(201).location('/api/courses/' + course.id).end(); // I think I need some work here. I think I need to add the id to the end of this url when the course is created.
     } catch (error) {
         if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
             const errors = error.errors.map(err => err.message);
