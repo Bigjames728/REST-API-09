@@ -21,6 +21,7 @@ router.get('/', asyncHandler( async (req, res) => {
 // GET route that will return a specific course along with the User that owns that course and a 200 HTTP status code.
 router.get('/:id', asyncHandler ( async (req, res) => {
     const course = await Course.findByPk(req.params.id, {
+        // In the response, only return the below attributes for the course model, as well as include the User model but only the specified attributes there as well.
         attributes: ['id', 'title', 'description', 'estimatedTime', 'materialsNeeded'],
         include: { model: User, attributes: ['id', 'firstName', 'lastName', 'emailAddress', 'password'] }
     });
