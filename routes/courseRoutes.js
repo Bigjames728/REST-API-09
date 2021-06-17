@@ -31,12 +31,12 @@ router.get('/:id', asyncHandler ( async (req, res) => {
     }
 }));
 
-// POST route that will create a new course, set the Location header to the URI for the newly created course, and return a 201 HTTP status code and no content.
+// POST route that will create a new course, set the Location header to the URL for the newly created course, and return a 201 HTTP status code and no content.
 router.post('/', authenticateUser, asyncHandler (async (req, res) => {
     let course = req.body;
     try {
         await Course.create(req.body);
-        res.status(201).location('/api/courses/' + course.id).end(); // I think I need some work here. I think I need to add the id to the end of this url when the course is created.
+        res.status(201).location('/api/courses/' + course.id).end(); 
     } catch (error) {
         if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
             const errors = error.errors.map(err => err.message);
@@ -67,8 +67,13 @@ router.put('/:id', authenticateUser, asyncHandler( async (req, res) => {
 
     try {
         const course = await Course.findByPk(req.params.id);
+
+        // extract the current user from request
         const { currentUser } = req; 
+
+        // If course exists..
         if (course) {
+            // And if the current user created the content, allow them to edit it. If not, a 403 forbidden is sent.
             if (currentUser.id === course.userId) {
                 await course.update(req.body);
                 res.status(204).end();
@@ -91,8 +96,13 @@ router.put('/:id', authenticateUser, asyncHandler( async (req, res) => {
 // DELETE route that will delete a specific course and return a 204 HTTP status code and no content.
 router.delete('/:id', authenticateUser, asyncHandler( async(req, res) => {
     const course = await Course.findByPk(req.params.id);
+
+    // extract the current user from request
     const { currentUser } = req;
+
+    // If course exists..
     if (course) {
+        // And if the current user created the content, allow them to delete it. If not, a 403 forbidden is sent.
         if (currentUser.id === course.userId) {
             await course.destroy();
             res.status(204).end();
