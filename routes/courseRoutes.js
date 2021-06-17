@@ -8,7 +8,8 @@ const { authenticateUser } = require('../middleware/auth-user');
 // GET route that will return a list of all courses including the User that owns each course and a 200 HTTP status code.
 router.get('/', asyncHandler( async (req, res) => {
     const course = await Course.findAll({
-        include: [{ model: User }]
+        attributes: ['id', 'title', 'description', 'estimatedTime', 'materialsNeeded'],
+        include: { model: User, attributes: ['id', 'firstName', 'lastName', 'emailAddress', 'password'] }
     });
     if (course) {
         res.status(200).json(course)
@@ -20,7 +21,8 @@ router.get('/', asyncHandler( async (req, res) => {
 // GET route that will return a specific course along with the User that owns that course and a 200 HTTP status code.
 router.get('/:id', asyncHandler ( async (req, res) => {
     const course = await Course.findByPk(req.params.id, {
-        include: [{ model: User }]
+        attributes: ['id', 'title', 'description', 'estimatedTime', 'materialsNeeded'],
+        include: { model: User, attributes: ['id', 'firstName', 'lastName', 'emailAddress', 'password'] }
     });
     if (course) {
         res.status(200).json(course);
@@ -65,9 +67,14 @@ router.put('/:id', authenticateUser, asyncHandler( async (req, res) => {
 
     try {
         const course = await Course.findByPk(req.params.id);
+        const { currentUser } = req; 
         if (course) {
-        await course.update(req.body);
-        res.status(204).end();
+            if (currentUser.id === course.userId) {
+                await course.update(req.body);
+                res.status(204).end();
+            } else {
+                res.status(403).end();
+            }
         } else {
         res.status(404).json({ message: "We weren't able to update this course at this time." });
         }
@@ -84,9 +91,14 @@ router.put('/:id', authenticateUser, asyncHandler( async (req, res) => {
 // DELETE route that will delete a specific course and return a 204 HTTP status code and no content.
 router.delete('/:id', authenticateUser, asyncHandler( async(req, res) => {
     const course = await Course.findByPk(req.params.id);
+    const { currentUser } = req;
     if (course) {
-        await course.destroy();
-        res.status(204).end();
+        if (currentUser.id === course.userId) {
+            await course.destroy();
+            res.status(204).end();
+        } else {
+            res.status(403).end();
+        }
     } else {
         res.status(404).json({ message: "Couldn't delete this course at this time." });
     }
