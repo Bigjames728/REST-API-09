@@ -8,6 +8,7 @@ const { authenticateUser } = require('../middleware/auth-user');
 // GET route that will return a list of all courses including the User that owns each course and a 200 HTTP status code.
 router.get('/', asyncHandler( async (req, res) => {
     const course = await Course.findAll({
+        // In the response, only return the below attributes for the course model, as well as include the User model but only the specified attributes there as well.
         attributes: ['id', 'title', 'description', 'estimatedTime', 'materialsNeeded'],
         include: { model: User, attributes: ['id', 'firstName', 'lastName', 'emailAddress', 'password'] }
     });
