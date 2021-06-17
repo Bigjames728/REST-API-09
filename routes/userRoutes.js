@@ -8,7 +8,11 @@ const { authenticateUser } = require('../middleware/auth-user');
 // GET route that returns the currently authenticated user along with a 200 status code
 router.get('/', authenticateUser, asyncHandler( async (req, res) => {
     const user = req.currentUser;
-    res.status(200).json(user);
+    res.status(200).json({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress
+    });
 }));
 
 // Route that creates a new user.
