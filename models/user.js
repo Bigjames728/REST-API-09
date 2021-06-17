@@ -81,7 +81,7 @@ module.exports = (sequelize) => {
         // }
       },
       set(val) {
-        if (!(val.length >= 8 && val.length <= 20)) {
+        if (val.length < 8 || val.length > 20) {
           throw Error('The password should be between 8 and 20 characters.');
         }
         const hashedPassword = bcrypt.hashSync(val, 10);
