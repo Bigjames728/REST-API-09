@@ -9,6 +9,7 @@ const { authenticateUser } = require('../middleware/auth-user');
 router.get('/', authenticateUser, asyncHandler( async (req, res) => {
     const user = req.currentUser;
     res.status(200).json({
+      // Only return the below attributes in the json response
       firstName: user.firstName,
       lastName: user.lastName,
       emailAddress: user.emailAddress
